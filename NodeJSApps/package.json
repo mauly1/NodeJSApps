@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-hello-world",
+  "version": "1.0.0",
+  "description": "Hello World sample app",
+  "main": "Backup-Notes-App/app.js",
+  "scripts": {
+    "start": "node Backup-Notes-App/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fhinkel/nodejs-hello-world.git"
+  },
+  "author": "fhinkel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fhinkel/nodejs-hello-world/issues"
+  },
+  "homepage": "https://github.com/fhinkel/nodejs-hello-world#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "validator": "^13.5.2",
+    "yargs": "^16.2.0"
+  }
+}
