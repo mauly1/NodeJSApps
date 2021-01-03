@@ -16,7 +16,7 @@ app.listen(port, () => {
 
 const jwt = require('jsonwebtoken')
 
-const myfunciton = async () => {
+/*const myfunciton = async () => {
     const token = jwt.sign({_di: 'GoldySunil'}, 'thisismynewcourse')
     console.log('token', token)
     //valid token validation scenario
@@ -32,5 +32,5 @@ const myfunciton = async () => {
     const tokenWithExpriry = jwt.sign({_di: 'GoldySunil'}, 'thisismynewcourse',{expiresIn: '7 days'})
     console.log('token', tokenWithExpriry)
 }
-myfunciton()
+myfunciton()*/
 

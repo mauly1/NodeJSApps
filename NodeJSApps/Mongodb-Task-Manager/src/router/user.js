@@ -8,7 +8,9 @@ router.post('/users', async (req, res) => {
     const user = new User(req.body);
     try {
         await user.save()
-        res.status(201).send(user)
+        const token = await user.generateToken()
+        console.log('JWT token', token)
+        res.status(201).send({user, token})
     } catch (e) {
         console.log(e);
         res.status(500).send('internal server error')
@@ -20,7 +22,12 @@ router.post('/users/login', async (req, res) => {
         const email = req.body.email
         const password = req.body.password
         const user = await User.findByCredentials(email, password)
-        res.sendStatus(200).send()
+        const token = await user.generateToken()
+        console.log('JWT token', token)
+        res.send({
+            user,
+            token
+        })
     } catch (e) {
         console.log(e);
         res.sendStatus(400).send()
