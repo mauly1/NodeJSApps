@@ -14,6 +14,20 @@ router.post('/users', async (req, res) => {
         res.status(500).send('internal server error')
     }
 })
+// find the user by his/her credentials . find user by email and password
+router.post('/users/login', async (req, res) => {
+    try {
+        const email = req.body.email
+        const password = req.body.password
+        const user = await User.findByCredentials(email, password)
+        res.sendStatus(200).send()
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(400).send()
+    }
+})
+
+
 // get all user info
 router.get('/users', async (req, res) => {
     try {
@@ -46,7 +60,7 @@ router.patch('/users/:id', async (req, res) => {
     const updates = Object.keys(req.body);
     const allowUpdates = ['name', 'password', 'age', 'email']
 
-    const isValidOperation = updates.every((update)=>allowUpdates.includes(update))
+    const isValidOperation = updates.every((update) => allowUpdates.includes(update))
     if (!isValidOperation) {
         return res.status(400).send(
             {
@@ -56,10 +70,17 @@ router.patch('/users/:id', async (req, res) => {
 
     try {
         console.log(_id)
-        console.log('req.body',req.body)
-        const user = await User.findByIdAndUpdate(_id, req.body, {new: true, runValidators: true})
+        console.log('req.body', req.body)
+        const user = await User.findById(_id);
+        console.log('---------------USER-------->', user)
+        updates.forEach((update) => {
+            user[update] = req.body[update]
+        })
+        await user.save()
+
+        //  const user = await User.findByIdAndUpdate(_id, req.body, {new: true, runValidators: true})
         if (!user) {
-            return   res.status(400).send('user not found..')
+            return res.status(400).send('user not found..')
         }
         console.log('updated user ', user)
         res.status(200).send(user)
@@ -80,10 +101,9 @@ router.delete('/users/:id', async (req, res) => {
 
     } catch (e) {
         console.log(e);
-        res.status(500).send({errortype:`internal server error`,errorMessage:""+e} )
+        res.status(500).send({errortype: `internal server error`, errorMessage: "" + e})
     }
 })
 
 
-
-module.exports=router
+module.exports = router

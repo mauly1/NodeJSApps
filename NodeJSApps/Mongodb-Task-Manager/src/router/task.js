@@ -1,6 +1,7 @@
 const express = require('express');
 const Tasks = require('../models/Task')
 const router = express.Router();
+const bycrypt = require('bcryptjs')
 
 
 //------------------------------------ Task related operations------------------
@@ -14,7 +15,6 @@ router.post('/tasks', async (req, res) => {
         res.status(500).send('internal server error')
     }
 })
-
 
 
 router.get('/tasks', async (req, res) => {
@@ -50,14 +50,23 @@ router.patch('/tasks/:id', async (req, res) => {
     const _id = req.params.id
     const updates = Object.keys(req.body)
     const allowUpdates = ['description', 'completed']
-    const isValidOperation =updates.every((update)=>allowUpdates.includes(update))
+    const isValidOperation = updates.every((update) => allowUpdates.includes(update))
     if (!isValidOperation) {
         return res.status(400).send({Error: 'Invalid field updates'})
     }
     try {
-        const task = await Tasks.findByIdAndUpdate(_id, req.body, {new: true, runValidators: true})
+        console.log('task id ', _id)
+        console.log('req.body', req.body)
+        const task = await Tasks.findById(_id);
+        console.log('Task ---', task)
+        updates.forEach((update) => {
+            task[update] = req.body[update]
+        })
+        await task.save();
+
+        //  const task = await Tasks.findByIdAndUpdate(_id, req.body, {new: true, runValidators: true})
         if (!task) {
-            return   res.status(400).send('Task not found..')
+            return res.status(400).send('Task not found..')
         }
         res.status(200).send(task)
     } catch (e) {
@@ -83,4 +92,4 @@ router.delete('/tasks/:id', async (req, res) => {
     }
 })
 
-module.exports =router
+module.exports = router
