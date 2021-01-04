@@ -86,5 +86,15 @@ userSChema.statics.findByCredentials = async (email, password) => {
     console.log('return user: ', user)
     return user
 }
+
+// remove password and other sensitive data from response
+userSChema.methods.toJSON =function(){
+    const user =this
+    const userObject =user.toObject()
+    delete userObject.password
+    delete userObject.tokens
+    return userObject
+}
+
 const User = mongoose.model('User', userSChema)
 module.exports = User

@@ -1,9 +1,10 @@
 const express = require('express');
 const User = require('../models/User')
-const router = express.Router();
+const router = express.Router()
+const auth = require('../middleware/auth')
 
 
-// post a new user info
+// post a new user info / user sign up
 router.post('/users', async (req, res) => {
     const user = new User(req.body);
     try {
@@ -24,19 +25,51 @@ router.post('/users/login', async (req, res) => {
         const user = await User.findByCredentials(email, password)
         const token = await user.generateToken()
         console.log('JWT token', token)
-        res.send({
-            user,
-            token
-        })
+        res.send({ user,token })
     } catch (e) {
         console.log(e);
         res.sendStatus(400).send()
     }
 })
 
+// logout the user
+
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+            req.user.tokens = req.user.tokens.filter((token)=>{
+                return token.token!==req.token
+            })
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500).send()
+    }
+})
+
+// logoutAll the user
+
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500).send()
+    }
+})
+
+// return only that User details which  user has been authenticated properly
 
 // get all user info
-router.get('/users', async (req, res) => {
+router.get('/users/me', auth, async (req, res) => {
+    res.status(200).send(req.user)
+})
+
+
+// get all user info
+router.get('/users', auth, async (req, res) => {
     try {
         const users = await User.find({})
         res.status(200).send(users)
