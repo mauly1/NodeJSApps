@@ -25,7 +25,7 @@ router.post('/users/login', async (req, res) => {
         const user = await User.findByCredentials(email, password)
         const token = await user.generateToken()
         console.log('JWT token', token)
-        res.send({ user,token })
+        res.send({user, token})
     } catch (e) {
         console.log(e);
         res.sendStatus(400).send()
@@ -36,9 +36,9 @@ router.post('/users/login', async (req, res) => {
 
 router.post('/users/logout', auth, async (req, res) => {
     try {
-            req.user.tokens = req.user.tokens.filter((token)=>{
-                return token.token!==req.token
-            })
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token
+        })
         await req.user.save()
         res.send()
     } catch (e) {
@@ -62,11 +62,53 @@ router.post('/users/logoutAll', auth, async (req, res) => {
 
 // return only that User details which  user has been authenticated properly
 
-// get all user info
+// get detail for login user
 router.get('/users/me', auth, async (req, res) => {
     res.status(200).send(req.user)
 })
 
+// delete operation for login user
+router.delete('/users/me', auth, async (req, res) => {
+    try {
+        await req.user.remove()
+        res.send(req.user)
+    } catch (e) {
+        console.log(e);
+        res.status(500).send({errortype: `internal server error`, errorMessage: "" + e})
+    }
+})
+
+// update operation for login User
+
+router.patch('/users/me', auth, async (req, res) => {
+    const _id = req.user._id
+    const updates = Object.keys(req.body);
+    const allowUpdates = ['name', 'password', 'age', 'email']
+
+    const isValidOperation = updates.every((update) => allowUpdates.includes(update))
+    if (!isValidOperation) {
+        return res.status(400).send(
+            {
+                error: 'Invalid updates'
+            })
+    }
+    try {
+        console.log(_id)
+        console.log('req.body', req.body)
+        const user = req.user
+        console.log('---------------USER-------->', user)
+        updates.forEach((update) => {
+            user[update] = req.body[update]
+        })
+        await user.save()
+        console.log('updated user ', user)
+        res.status(200).send(user)
+    } catch (e) {
+        console.log(e);
+        res.status(500).send(`internal server error: ${e}`)
+    }
+
+})
 
 // get all user info
 router.get('/users', auth, async (req, res) => {
@@ -93,7 +135,7 @@ router.get('/user/:id', async (req, res) => {
     }
 })
 
-// update operation for Users
+// update operation for any Users
 
 router.patch('/users/:id', async (req, res) => {
     const _id = req.params.id
@@ -129,8 +171,8 @@ router.patch('/users/:id', async (req, res) => {
         res.status(500).send(`internal server error: ${e}`)
     }
 })
-// delete user info
-router.delete('/users/:id', async (req, res) => {
+// delete any user info
+router.delete('/users/delete/:id', async (req, res) => {
     try {
         const _id = req.params.id
         const user = await User.findByIdAndDelete(_id)
