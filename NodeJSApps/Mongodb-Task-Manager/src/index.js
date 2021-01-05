@@ -7,6 +7,16 @@ const taskRouter = require('../src/router/task')
 const port = process.env.PORT || 3000
 
 
+app.use(express.json())
+app.use(userRouter);
+app.use(taskRouter)
+
+app.listen(port, () => {
+    console.log(`-------- Server is up on port ${port} ---------`)
+})
+
+
+
 // express middleware to do some thing (verifying token/logging user activity etc) before reaching request to router
 
 /*app.use((req,res,next)=>{
@@ -30,18 +40,10 @@ const port = process.env.PORT || 3000
         next()
     }*!/
 })*/
-
-app.use(express.json())
-app.use(userRouter);
-app.use(taskRouter)
-
-app.listen(port, () => {
-    console.log(`-------- Server is up on port ${port} ---------`)
-})
-
+/*
 const jwt = require('jsonwebtoken')
 
-/*const myfunciton = async () => {
+const myfunciton = async () => {
     const token = jwt.sign({_di: 'GoldySunil'}, 'thisismynewcourse')
     console.log('token', token)
     //valid token validation scenario
@@ -58,7 +60,7 @@ const jwt = require('jsonwebtoken')
     console.log('token', tokenWithExpriry)
 }
 myfunciton()*/
-
+/*
 // removing content from json
 
 const data ={
@@ -72,10 +74,23 @@ data.toJSON =function(){
     delete data.age
     return data
 }
-
 console.log('-------- After data manipulation returning deleting age and returning remaining object--------- ',JSON.stringify(data))
-
 data.toJSON =function(){
     return {}
 }
-console.log('-------- After data manipulation returning empty object--------- ',JSON.stringify(data))
+console.log('-------- After data manipulation returning empty object--------- ',JSON.stringify(data))*/
+
+/*const Task =require('./models/Task')
+const main = async ()=>{
+const task =await Task.findById('5ff30c49778a78be941f58b7');
+await task.populate('owner').execPopulate()
+console.log("------------------------ ",task)*/
+
+const User =require('./models/User')
+const main =async ()=>{
+    const user =await User.findById('5ff31aab95d7f5c0e8e73d40')
+    console.log('------------------user---------------- ',user);
+    await user.populate('tasks').execPopulate()
+    console.log('------------------user Task----------------',user.tasks);
+}
+main()

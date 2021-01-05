@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Task = require('./Task')
 
 const userSChema = new mongoose.Schema({
     name: {
@@ -51,6 +52,15 @@ const userSChema = new mongoose.Schema({
     }]
 })
 
+// virtual reference.
+// this below combination is not going to store in database but to get reference task for any user it will help us to store it aa a virtual data.
+
+
+userSChema.virtual('tasks',{
+    ref:'Tasks',
+    localField:'_id',   //_id is userid
+    foreignField:'owner'
+})
 // generate token
 
 userSChema.methods.generateToken = async function () {
@@ -69,6 +79,14 @@ userSChema.pre('save', async function (next) {
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
+    next()
+})
+
+// while deleting any user profile this middleware will also delete that user created all the tasks
+
+userSChema.pre('remove', async function (next){
+    const user =this
+    await Task.deleteMany({owner:user._id})
     next()
 })
 
