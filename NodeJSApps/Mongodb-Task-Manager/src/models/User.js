@@ -50,6 +50,8 @@ const userSChema = new mongoose.Schema({
             required: true
         }
     }]
+},{
+    timestamps:true
 })
 
 // virtual reference.

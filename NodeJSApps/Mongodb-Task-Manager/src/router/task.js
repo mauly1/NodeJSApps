@@ -20,11 +20,56 @@ router.post('/tasks', auth, async (req, res) => {
     }
 })
 
-
+// return complete task created by any user
 router.get('/tasks', async (req, res) => {
     try {
         const tasks = await Tasks.find({})
         res.status(200).send(tasks)
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('internal server error')
+    }
+})
+
+// return complete task created by any user and also give option for data Filtration
+// 1. path could be like /tasks/filter?completed=true
+// if completed not provided then below service will return all the tasks
+
+// 2. /tasks/filter?limit=10&skip=10
+
+// limit - how many records will be send to user
+// skip - if value 10 means send the data after skipping starting 10 records
+//in case if limit has been not provided by user then service will return all the task for that user.
+
+// sorting the output record
+// 3.  /task/filter?sortBy=createdAt:desc
+router.get('/tasks/filter', auth, async (req, res) => {
+    const limit = parseInt(req.query.limit)
+    const skip = parseInt(req.query.skip)
+    const match = {}
+    if (req.query.completed) {
+        match.completed = req.query.completed === 'true'
+    }
+    const sort = {}
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(':');
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+    try {
+        await req.user.populate({
+            path: 'tasks',
+            match,
+            options: {
+                limit,
+                skip
+            },
+            sort: {
+                sort
+                //createdAt:-1   // for ASC value will be 1 and for DESC =-1
+                //completed:-1
+            }
+        }).execPopulate()
+        res.send(req.user.tasks)
     } catch (e) {
         console.log(e);
         res.status(500).send('internal server error')
