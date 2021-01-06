@@ -16,7 +16,6 @@ app.listen(port, () => {
 })
 
 
-
 // express middleware to do some thing (verifying token/logging user activity etc) before reaching request to router
 
 /*app.use((req,res,next)=>{
@@ -86,6 +85,8 @@ const task =await Task.findById('5ff30c49778a78be941f58b7');
 await task.populate('owner').execPopulate()
 console.log("------------------------ ",task)*/
 
+// below methods populate will do the same work for patch/update operations
+/*
 const User =require('./models/User')
 const main =async ()=>{
     const user =await User.findById('5ff31aab95d7f5c0e8e73d40')
@@ -93,4 +94,25 @@ const main =async ()=>{
     await user.populate('tasks').execPopulate()
     console.log('------------------user Task----------------',user.tasks);
 }
-main()
+main()*/
+
+// file upload example
+
+const multer = require('multer')
+const upload = multer({
+    dest: 'images',
+    limits: {
+        filesize: 1000000
+    }, fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(doc|docx)$/)) {
+            return cb(new Error('please upload a word documents file'))
+        }
+        cb(undefined, true)
+    }
+})
+
+app.post('/upload', upload.single('upload'), (req, res) => {
+    res.status(200).send('image uploaded successfully...');
+}, (error, req, res, next) => {
+    res.status(400).send({error: error.message})
+})
