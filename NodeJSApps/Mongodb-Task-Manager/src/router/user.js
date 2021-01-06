@@ -202,7 +202,7 @@ const imageUpload = multer({
     }
 })
 
-router.post('/users/me/avatar',auth ,imageUpload.single('avatar'), (req, res) => {
+router.post('/users/me/avatar',imageUpload.single('avatar'), (req, res) => {
     res.status(200).send(`AVATAR: image's has been uploaded successfully `)
 }, (error, req, res, next) => {
     res.status(400).send({error: error.message})
