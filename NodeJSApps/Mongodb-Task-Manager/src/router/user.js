@@ -79,7 +79,7 @@ router.delete('/users/me', auth, async (req, res) => {
     }
 })
 
-// update operation for login User
+// update operation for login User.
 
 router.patch('/users/me', auth, async (req, res) => {
     const _id = req.user._id
@@ -188,24 +188,66 @@ router.delete('/users/delete/:id', async (req, res) => {
     }
 })
 
-// upload images for any user inside directory avatars
+// upload images for any user inside directory note in database
+// need to follow below steps
+// 1. need to enable dest: 'avatars',
+// 2. need to remove below line from model/user.js file
+/*avatar:{
+         type:Buffer
+     }*/
 
 const imageUpload = multer({
-    dest: 'avatars',
-    limits:{
+    // dest: 'avatars',  // when we want to store uploaded files in DB as a binary data then we have to remove dest from multer.
+    limits: {
         filesize: 1000000
-    },fileFilter(req,file,cb){
-        if(!file.originalname.match(/\.(doc|docx|jpg|jpeg|pdf)$/)){
+    }, fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(doc|docx|jpg|jpeg|pdf)$/)) {
             cb(new Error('only doc|docx|jpg|jpeg|pdf file extension supported'))
         }
-        cb(undefined,true)
+        cb(undefined, true)
     }
 })
-
-router.post('/users/me/avatar',imageUpload.single('avatar'), (req, res) => {
+// upload images on dierctory .
+router.post('/users/upload/img/avatar', imageUpload.single('avatar'), (req, res) => {
     res.status(200).send(`AVATAR: image's has been uploaded successfully `)
 }, (error, req, res, next) => {
     res.status(400).send({error: error.message})
+})
+
+// need to upload images on database
+router.post('/users/me/avatar', auth, imageUpload.single('avatar'), async (req, res) => {
+    req.user.avatar = req.file.buffer
+    await req.user.save()
+    res.status(200).send(`AVATAR: image's has been uploaded successfully `)
+}, (error, req, res, next) => {
+    res.status(400).send({error: error.message})
+})
+
+
+// Delete uploaded images from database
+router.delete('/users/me/avatar', auth, async (req, res) => {
+    req.user.buffer = undefined
+    await req.user.save()
+
+    res.status(200).send(`AVATAR: Uploaded image's has been deleted successfully `)
+}, (error, req, res, next) => {
+    res.status(400).send({error: error.message})
+})
+
+// return images to requester
+
+router.get('/users/:id/avatar', async (req, res) => {
+    try {
+        const _id = req.params.id
+        const user = await User.findById(_id)
+        if (!user || !user.avatar) {
+            throw new Error();
+        }
+        res.set('Content-Type', 'image/jpg')
+        res.send(user.avatar)
+    } catch {
+        res.status(400).send('Either User is not available or User has not uploaded any avatar images till yet !!')
+    }
 })
 
 module.exports = router
