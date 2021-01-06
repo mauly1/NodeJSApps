@@ -98,6 +98,7 @@ main()*/
 
 // file upload example
 
+/*
 const multer = require('multer')
 const upload = multer({
     dest: 'images',
@@ -115,4 +116,4 @@ app.post('/upload', upload.single('upload'), (req, res) => {
     res.status(200).send('image uploaded successfully...');
 }, (error, req, res, next) => {
     res.status(400).send({error: error.message})
-})
+})*/

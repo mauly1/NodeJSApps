@@ -3,6 +3,7 @@ const User = require('../models/User')
 const router = express.Router()
 const auth = require('../middleware/auth')
 const multer = require('multer')
+const sharp = require('sharp')
 
 
 // post a new user info / user sign up
@@ -216,7 +217,11 @@ router.post('/users/upload/img/avatar', imageUpload.single('avatar'), (req, res)
 
 // need to upload images on database
 router.post('/users/me/avatar', auth, imageUpload.single('avatar'), async (req, res) => {
-    req.user.avatar = req.file.buffer
+    // upload same image whihc user has provided us
+    // req.user.avatar = req.file.buffer
+    //  before storing image resize it.
+    const buffer = await sharp(req.file.buffer).resize({height: 250, width: 250}).png().toBuffer()
+    req.user.avatar = buffer
     await req.user.save()
     res.status(200).send(`AVATAR: image's has been uploaded successfully `)
 }, (error, req, res, next) => {
@@ -243,7 +248,7 @@ router.get('/users/:id/avatar', async (req, res) => {
         if (!user || !user.avatar) {
             throw new Error();
         }
-        res.set('Content-Type', 'image/jpg')
+        res.set('Content-Type', 'image/png')
         res.send(user.avatar)
     } catch {
         res.status(400).send('Either User is not available or User has not uploaded any avatar images till yet !!')
