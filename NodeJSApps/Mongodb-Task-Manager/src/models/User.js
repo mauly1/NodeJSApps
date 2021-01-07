@@ -70,7 +70,8 @@ userSChema.virtual('tasks',{
 
 userSChema.methods.generateToken = async function () {
     const user = this
-    const token = jwt.sign({_id: user._id.toString()}, 'thisIsNewJWTToken')
+    const jwtSecret = process.env.JWT_SECRET || 'thisIsNewJWTToken'
+    const token = jwt.sign({_id: user._id.toString()}, jwtSecret)
     console.log('Generated token', token)
     user.tokens= user.tokens.concat({token})
     await user.save()

@@ -4,13 +4,14 @@ const router = express.Router()
 const auth = require('../middleware/auth')
 const multer = require('multer')
 const sharp = require('sharp')
-
+const {sendWelecomeEmail, sendCancelationEmail} = require('../../emails/account')
 
 // post a new user info / user sign up
 router.post('/users', async (req, res) => {
     const user = new User(req.body);
     try {
         await user.save()
+        // sendWelecomeEmail(user.email,user.name)  // this code will be use to send email after successful user creation.
         const token = await user.generateToken()
         console.log('JWT token', token)
         res.status(201).send({user, token})
@@ -233,7 +234,7 @@ router.post('/users/me/avatar', auth, imageUpload.single('avatar'), async (req, 
 router.delete('/users/me/avatar', auth, async (req, res) => {
     req.user.buffer = undefined
     await req.user.save()
-
+    //sendCancelationEmail(req.user.email,req.user.name)  // this code will be used to send email after deleting user account
     res.status(200).send(`AVATAR: Uploaded image's has been deleted successfully `)
 }, (error, req, res, next) => {
     res.status(400).send({error: error.message})
