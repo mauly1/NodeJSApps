@@ -74,7 +74,7 @@ router.get('/users/me', auth, async (req, res) => {
 router.delete('/users/me', auth, async (req, res) => {
     try {
         await req.user.remove()
-        res.send(req.user)
+        res.status(200).send(req.user)
     } catch (e) {
         console.log(e);
         res.status(500).send({errortype: `internal server error`, errorMessage: "" + e})
@@ -84,6 +84,13 @@ router.delete('/users/me', auth, async (req, res) => {
 // update operation for login User.
 
 router.patch('/users/me', auth, async (req, res) => {
+
+    console.log('-------------------- Request-------')
+    console.log(req)
+    console.log('-------------------- Request header-------')
+    console.log(req.header)
+    console.log('-------------------- Request body-------')
+    console.log(req.body)
     const _id = req.user._id
     const updates = Object.keys(req.body);
     const allowUpdates = ['name', 'password', 'age', 'email']

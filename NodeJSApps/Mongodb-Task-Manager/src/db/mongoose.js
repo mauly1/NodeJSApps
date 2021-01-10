@@ -1,5 +1,11 @@
 const mongoose = require('mongoose')
 const validator =require('validator');
+// mongodb+srv://taskapp:<password>@cluster0.zo4lm.mongodb.net/test
+// username taskapp pass 001****11
+/*
+1. enable srv record
+2. authentication username and password  // username taskapp pass 001****11
+3. favourite name - any name of the production database connection  */
 const connectionURL = process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/task-manager-api'
 mongoose.connect(connectionURL, {
     useNewUrlParser: true,
