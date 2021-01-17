@@ -1,0 +1,12 @@
+{"0":"/ query","1":{"query":{"q":"1"}},"name":"myapp","hostname":"Fredriks-MBP","pid":2726,"level":30,"msg":"","time":"2018-02-11T14:51:16.738Z","v":0}
+{"0":"Finding user","1":{"q":"1"},"name":"myapp","hostname":"Fredriks-MBP","pid":2726,"level":30,"msg":"","time":"2018-02-11T14:51:16.741Z","v":0}
+{"0":"User found","1":{"foundUser":{"username":"foo","password":"*****","email":"*****","address":{"street":"*****","zip":"*****","city":"*****"}}},"name":"myapp","hostname":"Fredriks-MBP","pid":2726,"level":30,"msg":"","time":"2018-02-11T14:51:16.742Z","v":0}
+{"0":"/ response","1":{"username":"foo","foundUser":true},"name":"myapp","hostname":"Fredriks-MBP","pid":2726,"level":30,"msg":"","time":"2018-02-11T14:51:16.743Z","v":0}
+{"0":"/ query","1":{"query":{}},"name":"myapp","hostname":"C02VN0DFHTD6","pid":39044,"level":30,"msg":"","time":"2021-01-17T11:30:55.418Z","v":0}
+{"0":"Finding user","1":{},"name":"myapp","hostname":"C02VN0DFHTD6","pid":39044,"level":30,"msg":"","time":"2021-01-17T11:30:55.420Z","v":0}
+{"0":"User found","1":{"foundUser":{}},"name":"myapp","hostname":"C02VN0DFHTD6","pid":39044,"level":30,"msg":"","time":"2021-01-17T11:30:55.421Z","v":0}
+{"0":"/ response","1":{"username":{},"foundUser":false},"name":"myapp","hostname":"C02VN0DFHTD6","pid":39044,"level":30,"msg":"","time":"2021-01-17T11:30:55.421Z","v":0}
+{"0":"/ query","1":{"query":{"q":"1"}},"name":"myapp","hostname":"C02VN0DFHTD6","pid":39044,"level":30,"msg":"","time":"2021-01-17T11:31:13.911Z","v":0}
+{"0":"Finding user","1":{"q":"1"},"name":"myapp","hostname":"C02VN0DFHTD6","pid":39044,"level":30,"msg":"","time":"2021-01-17T11:31:13.912Z","v":0}
+{"0":"User found","1":{"foundUser":{"username":"foo","password":"*****","email":"*****","address":{"street":"*****","zip":"*****","city":"*****"}}},"name":"myapp","hostname":"C02VN0DFHTD6","pid":39044,"level":30,"msg":"","time":"2021-01-17T11:31:13.912Z","v":0}
+{"0":"/ response","1":{"username":"foo","foundUser":true},"name":"myapp","hostname":"C02VN0DFHTD6","pid":39044,"level":30,"msg":"","time":"2021-01-17T11:31:13.912Z","v":0}
