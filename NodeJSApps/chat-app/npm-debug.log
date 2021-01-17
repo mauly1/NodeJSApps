@@ -1,0 +1,29 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/su244358/.nvm/v0.10.33/bin/node',
+1 verbose cli   '/Users/su244358/.nvm/v0.10.33/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'localstart' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 verbose run-script [ 'prelocalstart', 'localstart', 'postlocalstart' ]
+5 info prelocalstart chat-app@1.0.0
+6 info localstart chat-app@1.0.0
+7 verbose unsafe-perm in lifecycle true
+8 info chat-app@1.0.0 Failed to exec localstart script
+9 error chat-app@1.0.0 localstart: `env-cmd -f ./config/dev.env  nodemon src/index.js`
+9 error Exit status 8
+10 error Failed at the chat-app@1.0.0 localstart script.
+10 error This is most likely a problem with the chat-app package,
+10 error not with npm itself.
+10 error Tell the author that this fails on your system:
+10 error     env-cmd -f ./config/dev.env  nodemon src/index.js
+10 error You can get their info via:
+10 error     npm owner ls chat-app
+10 error There is likely additional logging output above.
+11 error System Darwin 18.7.0
+12 error command "/Users/su244358/.nvm/v0.10.33/bin/node" "/Users/su244358/.nvm/v0.10.33/bin/npm" "run" "localstart"
+13 error cwd /Users/su244358/Downloads/NodeJSApps/NodeJSApps/chat-app
+14 error node -v v0.10.33
+15 error npm -v 1.4.28
+16 error code ELIFECYCLE
+17 verbose exit [ 1, true ]
